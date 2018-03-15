@@ -1,0 +1,42 @@
+---
+title: "Cruz_MA712_HW2"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+```{r}
+educinc <- read.csv("/Users/cruz/Desktop/R11455207_SL040.csv", header=TRUE)
+print(educinc)
+```
+
+```{r}
+educinc2 <- rename(educinc,
+                   state = Geo_QName,
+                   BA = SE_T025_005,
+                   MA = SE_T025_006)
+
+educinc2 <- mutate(educinc2, IncBelow75k = SE_T056_002 + SE_T056_003 + SE_T056_004 + SE_T056_005 + SE_T056_006 + SE_T056_007 + SE_T056_008 + SE_T056_009 + SE_T056_010 + SE_T056_011 + SE_T056_012, IncAbove75k = SE_T056_013 + SE_T056_014 + SE_T056_015 + SE_T056_016 + SE_T056_017)
+
+educinc2 <- select(educinc2, state, BA, MA, IncBelow75k, IncAbove75k)
+
+print(educinc2)
+
+```
+
+```{r}
+educinc3 <- mutate(educinc2, "HigherEdProp" = MA/ (MA + BA),
+             "IncAbove75kProp"= IncAbove75k/ (IncAbove75k + IncBelow75k))
+educinc3 <- select(educinc3, state, HigherEdProp, IncAbove75kProp)
+
+print(educinc3)
+```
+```{r}
+library(ggplot2) 
+ggplot(data = educinc3) + 
+  geom_point(mapping = aes(x = HigherEdProp, y = IncAbove75kProp), color = "blue")
+```
+
+`
+
